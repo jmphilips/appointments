@@ -9,14 +9,18 @@ class Schedule
     @appointments = []
   end
 
-  def appointments
-    @appointments.sort_by { |x, y| x.start_time <=> y.start_time }
+  def sort_appointments
+    puts @appointments
+    @appointments.sort_by { |appointment| appointment.start_time }
   end
 
   def add_appointment(start_time, end_time)
     if valid_appointment(start_time, end_time)
       appointment = Appointment.new({start_time: start_time, end_time: end_time, schedule_id: self.id})
       @appointments.push(appointment)
+      if Appointment.count > 1
+        @appointments = sort_appointments
+      end
     end
   end
 
