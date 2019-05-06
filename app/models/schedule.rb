@@ -1,7 +1,7 @@
 class Schedule
   include ActiveModel::Model
 
-  attr_accessor :id, :appointments
+  attr_accessor :id, :appointments, :destroyed
 
   def initialize(args = {})
     @destroyed = false
@@ -27,14 +27,11 @@ class Schedule
 
   def remove_appointment(appointment_id)
     @appointments = @appointments.map { |appointment| appointment.id != appointment_id}
-  end
-
-  def delete
-    self.delete
+    Appointment.find(appointment_id).destroy
   end
 
   def self.all
-    ObjectSpace.each_object(self)
+    ObjectSpace.each_object(self).select { |schedule| schedule.destroyed == false }
   end
 
   def self.count
@@ -43,5 +40,9 @@ class Schedule
 
   def self.find(uuid)
     self.all.find { |schedule| schedule.id == uuid }
+  end
+
+  def destroy
+    self.destroyed = true
   end
 end

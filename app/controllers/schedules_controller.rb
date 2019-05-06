@@ -18,7 +18,7 @@ class SchedulesController < ApplicationController
 
   def destroy
     @schedule = Schedule.find(params[:id])
-    @schedule.destroyed = true
+    @schedule.destroy
     render json: @schedule
   end
 end
